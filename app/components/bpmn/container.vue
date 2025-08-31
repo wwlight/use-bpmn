@@ -1,0 +1,119 @@
+<script setup lang="ts">
+// eslint-disable-next-line ts/ban-ts-comment
+// @ts-nocheck
+import {
+  BpmnPropertiesPanelModule,
+  BpmnPropertiesProviderModule,
+  CamundaPlatformPropertiesProviderModule,
+} from 'bpmn-js-properties-panel'
+import BpmnModeler from 'bpmn-js/lib/Modeler'
+import BpmnModdle from 'bpmn-moddle'
+import CamundaBpmnModdle from 'camunda-bpmn-moddle/resources/camunda.json'
+import gridModule from 'diagram-js-grid'
+import translateModule from './i18n/translate'
+import ZoomTools from './zoom-tools.vue'
+import 'bpmn-js/dist/assets/diagram-js.css'
+import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css'
+import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css'
+import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css'
+import '@bpmn-io/properties-panel/dist/assets/properties-panel.css'
+
+defineOptions({
+  name: 'BpmnContainer',
+})
+
+const { xmlStr } = defineProps(['xmlStr'])
+const { isFalsy } = useUtils()
+let bpmnModeler: any
+const bpmnReady = ref(false)
+
+onMounted(() => {
+  initModeler()
+})
+
+onUnmounted(() => {
+  bpmnModeler?.destroy?.()
+})
+
+function initModeler() {
+  const option = {
+    container: '#bpmn-container',
+    propertiesPanel: {
+      parent: '#properties-panel',
+    },
+    additionalModules: [
+      gridModule,
+      translateModule,
+      BpmnPropertiesPanelModule,
+      BpmnPropertiesProviderModule,
+      CamundaPlatformPropertiesProviderModule,
+    ],
+    moddleExtensions: {
+      camunda: CamundaBpmnModdle,
+    },
+  }
+  bpmnModeler = new BpmnModeler(option)
+  !isFalsy(xmlStr) ? loadDiagram() : createDiagram()
+}
+
+async function loadDiagram() {
+  await importXML(xmlStr)
+  bpmnReady.value = true
+}
+
+async function createDiagram() {
+  await bpmnModeler?.createDiagram?.()
+  bpmnModeler?.get('canvas')?.zoom('fit-viewport', 'auto')
+  bpmnReady.value = true
+}
+
+async function getXML() {
+  if (!bpmnModeler)
+    return
+
+  const { xml } = await bpmnModeler.saveXML()
+  const { name } = await getPanelProperties(xml)
+  return [xml, name] as any
+}
+
+// 获取属性面板数据
+async function getPanelProperties(xml: string) {
+  const moddle = new BpmnModdle()
+  const { rootElement: definitions } = await moddle.fromXML(xml)
+  return definitions.get('rootElements').at(0) || {}
+}
+
+async function importXML(xml: string) {
+  await bpmnModeler?.importXML(xml)
+  bpmnModeler?.get('canvas')?.zoom('fit-viewport', 'auto')
+}
+
+function undo() {
+  bpmnModeler?.get('commandStack').undo()
+}
+
+function redo() {
+  bpmnModeler?.get('commandStack').redo()
+}
+
+defineExpose({
+  getPanelProperties,
+  getXML,
+  importXML,
+  undo,
+  redo,
+})
+</script>
+
+<template>
+  <div flex="~ 1" class="b-bs-(1 [hsl(225,10%,75%)]) bg-#fff of-hidden">
+    <div class="flex-1 relative">
+      <div id="bpmn-container" class="size-full [&_svg]:outline-none" />
+      <zoom-tools v-if="bpmnReady" :bpmn-modeler />
+    </div>
+    <div
+      id="properties-panel"
+      class="b-(l-1 l-[hsl(225,10%,75%)] l-solid) min-w-[--bpmn-properties-panel-width] w-[--bpmn-properties-panel-width]"
+    />
+  </div>
+</template>
