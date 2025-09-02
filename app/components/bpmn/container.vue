@@ -10,8 +10,13 @@ import BpmnModeler from 'bpmn-js/lib/Modeler'
 import BpmnModdle from 'bpmn-moddle'
 import CamundaBpmnModdle from 'camunda-bpmn-moddle/resources/camunda.json'
 import gridModule from 'diagram-js-grid'
-import translateModule from './i18n/translate'
-import ZoomTools from './zoom-tools.vue'
+import { DBLCLICK_PROPERTY_CONFIG } from '~/constants'
+import CustomExtensionModule from './_custom-extension/module'
+import DialogAssignee from './_dialog-assignee.vue'
+import DialogCandidateGroups from './_dialog-candidate-groups.vue'
+import DialogFormKey from './_dialog-form-key.vue'
+import translateModule from './_i18n/translate'
+import ZoomTools from './_zoom-tools.vue'
 import 'bpmn-js/dist/assets/diagram-js.css'
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css'
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css'
@@ -26,6 +31,35 @@ const { xmlStr } = defineProps(['xmlStr'])
 const { isFalsy } = useUtils()
 let bpmnModeler: any
 const bpmnReady = ref(false)
+// 属性面板当前双击的属性信息
+const dblclickPropertyConfig = reactive(DBLCLICK_PROPERTY_CONFIG)
+// 属性面板-负责人
+const assigneeVisible = computed({
+  get: () => dblclickPropertyConfig.visible && dblclickPropertyConfig.type === 'assignee',
+  set: (v) => {
+    if (!v) {
+      Object.assign(dblclickPropertyConfig, { type: DBLCLICK_PROPERTY_CONFIG })
+    }
+  },
+})
+// 属性面板-角色组
+const candidateGroupsVisible = computed({
+  get: () => dblclickPropertyConfig.visible && dblclickPropertyConfig.type === 'candidateGroups',
+  set: (v) => {
+    if (!v) {
+      Object.assign(dblclickPropertyConfig, { type: DBLCLICK_PROPERTY_CONFIG })
+    }
+  },
+})
+// 属性面板-表单key
+const formKeyVisible = computed({
+  get: () => dblclickPropertyConfig.visible && dblclickPropertyConfig.type === 'formKey',
+  set: (v) => {
+    if (!v) {
+      Object.assign(dblclickPropertyConfig, { type: DBLCLICK_PROPERTY_CONFIG })
+    }
+  },
+})
 
 onMounted(() => {
   initModeler()
@@ -47,6 +81,7 @@ function initModeler() {
       BpmnPropertiesPanelModule,
       BpmnPropertiesProviderModule,
       CamundaPlatformPropertiesProviderModule,
+      CustomExtensionModule(dblclickPropertyConfig),
     ],
     moddleExtensions: {
       camunda: CamundaBpmnModdle,
@@ -84,8 +119,14 @@ async function getPanelProperties(xml: string) {
 }
 
 async function importXML(xml: string) {
-  await bpmnModeler?.importXML(xml)
-  bpmnModeler?.get('canvas')?.zoom('fit-viewport', 'auto')
+  try {
+    await bpmnModeler?.importXML(xml)
+    bpmnModeler?.get('canvas')?.zoom('fit-viewport', 'auto')
+  }
+  catch (err) {
+    ElMessage.error('加载失败')
+    console.error('加载 BPMN 文件失败:', err.message, err.warnings)
+  }
 }
 
 function undo() {
@@ -94,6 +135,22 @@ function undo() {
 
 function redo() {
   bpmnModeler?.get('commandStack').redo()
+}
+
+// 更新属性面板数据
+function updateModdleProperties(key: string, value: string) {
+  if (bpmnModeler) {
+    const elementRegistry = bpmnModeler?.get('elementRegistry')
+    const selectionElement = elementRegistry?.get(dblclickPropertyConfig.selectionId)
+    if (elementRegistry && selectionElement) {
+      const modeling = bpmnModeler?.get('modeling')
+      modeling?.updateModdleProperties(
+        selectionElement,
+        selectionElement.businessObject,
+        { [key]: value },
+      )
+    }
+  }
 }
 
 defineExpose({
@@ -114,6 +171,18 @@ defineExpose({
     <div
       id="properties-panel"
       class="b-(l-1 l-[hsl(225,10%,75%)] l-solid) min-w-[--bpmn-properties-panel-width] w-[--bpmn-properties-panel-width]"
+    />
+    <dialog-assignee
+      v-if="assigneeVisible" v-model="assigneeVisible"
+      @confirm="(value) => updateModdleProperties('assignee', value)"
+    />
+    <dialog-candidate-groups
+      v-if="candidateGroupsVisible" v-model="candidateGroupsVisible"
+      @confirm="(value) => updateModdleProperties('candidateGroups', value)"
+    />
+    <dialog-form-key
+      v-if="formKeyVisible" v-model="formKeyVisible" :form-key="dblclickPropertyConfig.value"
+      @confirm="(value) => updateModdleProperties('formKey', value)"
     />
   </div>
 </template>

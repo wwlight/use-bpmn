@@ -53,7 +53,7 @@ export default {
   'Expression': '表达式',
   'Delegate expression': '代理表达式',
   'Config': '配置',
-  'Form key': '表单 key',
+  'Form key': '表单 key（单击输入，双击选择）',
   'Form reference': '表单引用',
   'Time to live': '存活时间',
   'Java class': 'Java 类',
@@ -119,8 +119,8 @@ export default {
   'Throw expression': '异常抛出表达式',
   'Source expression': '源表达式',
 
-  'Assignee': '负责人',
-  'Candidate groups': '候选组',
+  'Assignee': '负责人（单击输入，双击选择）', // 负责人
+  'Candidate groups': '角色组（单击输入，双击选择）', // 候选组
   'Candidate users': '候选用户',
   'Due date': '截止日期',
   'Follow up date': '跟进日期',

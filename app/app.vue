@@ -1,7 +1,15 @@
+<script setup lang="ts">
+import zhCn from 'element-plus/es/locale/lang/zh-cn'
+</script>
+
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
+  <ClientOnly>
+    <el-config-provider :locale="zhCn">
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+    </el-config-provider>
+  </ClientOnly>
 </template>
 
 <style scoped lang="scss">

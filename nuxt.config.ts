@@ -10,12 +10,20 @@ export default defineNuxtConfig({
   pages: {
     pattern: ['**/*.vue', '!**/_*'],
   },
+  imports: {
+    dirs: ['api'],
+  },
   devtools: { enabled: false },
   app: {
     pageTransition: { name: 'page', mode: 'out-in' },
     baseURL: process.env.NUXT_PUBLIC_BASE_URL || '/', // 针对 GitHub Pages 做的路径适配
   },
   css: ['@/styles/var.scss'],
+  // router: {
+  //   options: {
+  //     hashMode: true,
+  //   },
+  // },
   runtimeConfig: {
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE,

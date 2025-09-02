@@ -9,10 +9,14 @@ const bpmnRef = useTemplateRef('bpmn')
 const previewVisible = ref(false)
 const xmlStr = ref('')
 const bpmnName = ref('')
-
-const { open: handleImport, reset, onChange } = useFileDialog({
-  accept: '.bpmn',
-})
+const { open: handleImport, reset, onChange } = useFileDialog({ accept: '.bpmn' })
+const operationGroup = [
+  { label: '撤销', click: handleUndo, tooltip: '快捷键：Ctrl + Z' },
+  { label: '重做', click: handleRedo, tooltip: '快捷键：Ctrl + Shift + Z' },
+  { label: '导入', click: handleImport },
+  { label: '下载', click: handleDownload },
+  { label: '预览', click: handlePreview },
+]
 
 onChange((fileList) => {
   if (fileList && fileList.length > 0) {
@@ -64,36 +68,27 @@ async function handleSave() {
 <template>
   <div class="size-screen" flex="~ col">
     <div class="pl-20 bg-#fff h-50 min-h-50 w-full z-10" flex="~ items-center">
-      <el-link type="primary" underline="never" href="https://github.com/wwlight/use-bpmn" target="_blank" class="text-20 font-bold lt-sm:hidden">
+      <el-link
+        type="primary" underline="never" href="https://github.com/wwlight/use-bpmn" target="_blank"
+        class="text-20 font-bold lt-sm:hidden"
+      >
         use-bpmn
       </el-link>
       <div flex="~ 1 justify-end items-center" class="lt-sm:hidden">
-        <el-divider direction="vertical" />
-        <ep-tooltip content="快捷键：Ctrl + Z">
-          <el-button type="primary" link bg @click="handleUndo">
-            撤销
+        <template v-for="(item, index) in operationGroup" :key="index">
+          <el-divider direction="vertical" />
+          <ep-tooltip v-if="item.tooltip" :content="item.tooltip">
+            <el-button type="primary" link bg @click="item.click">
+              {{ item.label }}
+            </el-button>
+          </ep-tooltip>
+          <el-button v-else type="primary" link bg @click="item.click()">
+            {{ item.label }}
           </el-button>
-        </ep-tooltip>
-        <el-divider direction="vertical" />
-        <ep-tooltip content="快捷键：Ctrl + Shift + Z">
-          <el-button type="primary" link bg @click="handleRedo">
-            重做
-          </el-button>
-        </ep-tooltip>
-        <el-divider direction="vertical" />
-        <el-button type="primary" link bg @click="handleImport()">
-          导入
-        </el-button>
-        <el-divider direction="vertical" />
-        <el-button type="primary" link bg @click="handleDownload">
-          下载
-        </el-button>
+        </template>
         <el-divider direction="vertical" class="mr-0" />
       </div>
       <div class="ml-a px-10 w-[--bpmn-properties-panel-width]" flex="~ justify-end">
-        <el-button type="success" text bg @click="handlePreview">
-          预览
-        </el-button>
         <el-button type="primary" @click="handleSave">
           保存
         </el-button>
@@ -101,7 +96,8 @@ async function handleSave() {
     </div>
     <bpmn-container ref="bpmn" :xml-str="defaultBpmn" />
     <ep-dialog
-      v-if="previewVisible" v-model="previewVisible" :title="bpmnName" :show-footer="false" class="h-full" body-class="!p-0"
+      v-if="previewVisible" v-model="previewVisible" :title="bpmnName" :show-footer="false" class="h-full"
+      body-class="!p-0"
     >
       <template #body>
         <bpmn-preview :xml-str />
