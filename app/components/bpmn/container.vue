@@ -11,12 +11,13 @@ import BpmnModdle from 'bpmn-moddle'
 import CamundaBpmnModdle from 'camunda-bpmn-moddle/resources/camunda.json'
 import gridModule from 'diagram-js-grid'
 import { DBLCLICK_PROPERTY_CONFIG } from '~/constants'
-import CustomExtensionModule from './_custom-extension/module'
-import DialogAssignee from './_dialog-assignee.vue'
-import DialogCandidateGroups from './_dialog-candidate-groups.vue'
-import DialogFormKey from './_dialog-form-key.vue'
-import translateModule from './_i18n/translate'
-import ZoomTools from './_zoom-tools.vue'
+import DialogAssignee from './_com/dialog-assignee.vue'
+import DialogCandidateGroups from './_com/dialog-candidate-groups.vue'
+import DialogFormKey from './_com/dialog-form-key.vue'
+import ZoomTools from './_com/zoom-tools.vue'
+import DblclickEventRegisterModule from './_extension/dblclick-event-register'
+import HidePropertiesProviderModule from './_extension/hide-properties-provider'
+import translateModule from './_i18n'
 import 'bpmn-js/dist/assets/diagram-js.css'
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css'
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css'
@@ -81,7 +82,8 @@ function initModeler() {
       BpmnPropertiesPanelModule,
       BpmnPropertiesProviderModule,
       CamundaPlatformPropertiesProviderModule,
-      CustomExtensionModule(dblclickPropertyConfig),
+      DblclickEventRegisterModule(dblclickPropertyConfig),
+      HidePropertiesProviderModule,
     ],
     moddleExtensions: {
       camunda: CamundaBpmnModdle,

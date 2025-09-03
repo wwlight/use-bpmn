@@ -60,6 +60,8 @@ async function handlePreview() {
 
 async function handleSave() {
   const [xml, name] = await bpmnRef.value?.getXML()
+  ElMessage.closeAll()
+  ElMessage.success(`已读取到：【通用-名称】${name}`)
   // eslint-disable-next-line no-console
   console.log({ xml, name })
 }

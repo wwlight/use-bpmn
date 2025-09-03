@@ -3,8 +3,8 @@
 // @ts-nocheck
 import BpmnModeler from 'bpmn-js/lib/Modeler'
 import gridModule from 'diagram-js-grid'
-import translateModule from './_i18n/translate'
-import ZoomTools from './_zoom-tools.vue'
+import ZoomTools from './_com/zoom-tools.vue'
+import translateModule from './_i18n'
 import 'bpmn-js/dist/assets/diagram-js.css'
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css'
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css'

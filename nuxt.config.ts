@@ -50,6 +50,7 @@ export default defineNuxtConfig({
         mangle: {
           // 禁止混淆 bpmn 中指定变量名
           reserved: [
+            'propertiesPanel',
             'eventBus',
             'config',
           ],
