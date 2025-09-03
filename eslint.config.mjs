@@ -5,7 +5,7 @@ export default withNuxt(
   antfu({
     unocss: true,
     formatters: true,
-    ignores: [],
+    ignores: ['README.md'],
     rules: {
       'vue/valid-v-for': 'off',
       'vue/require-v-for-key': 'off',
