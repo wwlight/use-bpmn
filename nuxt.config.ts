@@ -33,6 +33,16 @@ export default defineNuxtConfig({
     inlineStyles: false, // For UnoCSS
   },
   compatibilityDate: '2025-07-15',
+  nitro: {
+    routeRules: {
+      '*': {
+        cors: true,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+      },
+    },
+  },
   vite: {
     build: {
       minify: 'terser',
