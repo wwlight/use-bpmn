@@ -1,6 +1,6 @@
 import { DBLCLICK_PROPERTY_CONFIG } from '~/constants'
 
-function InteractionEvent(eventBus, config) {
+function RegisterDblclickEvent(eventBus, config) {
   let doubleClickHandlers = {}
   const selectors = [
     'input[name=assignee]',
@@ -40,15 +40,15 @@ function InteractionEvent(eventBus, config) {
   })
 }
 
-InteractionEvent.$inject = ['eventBus']
+RegisterDblclickEvent.$inject = ['eventBus']
 
 export default function (config) {
   return {
-    __init__: ['interactionEvent'],
-    interactionEvent: [
+    __init__: ['registerDblclickEvent'],
+    registerDblclickEvent: [
       'type',
       function (eventBus) {
-        return new InteractionEvent(eventBus, config)
+        return new RegisterDblclickEvent(eventBus, config)
       },
     ],
   }

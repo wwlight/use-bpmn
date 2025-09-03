@@ -33,6 +33,20 @@ export default defineNuxtConfig({
     inlineStyles: false, // For UnoCSS
   },
   compatibilityDate: '2025-07-15',
+  vite: {
+    build: {
+      minify: 'terser',
+      terserOptions: {
+        mangle: {
+          // 禁止混淆 bpmn 中指定变量名
+          reserved: [
+            'eventBus',
+            'config',
+          ],
+        },
+      },
+    },
+  },
   elementPlus: {
     importStyle: false,
   },

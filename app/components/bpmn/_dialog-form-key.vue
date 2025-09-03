@@ -80,8 +80,8 @@ function handleConfirm(cb: () => void) {
             </template>
           </el-table-column>
         </template>
-        <ep-pagination v-model:page-num="search.pageNum" v-model:page-size="search.pageSize" :total="pageTotal" />
       </ep-table>
+      <ep-pagination v-model:page-num="search.pageNum" v-model:page-size="search.pageSize" :total="pageTotal" />
     </template>
   </ep-dialog>
 </template>
