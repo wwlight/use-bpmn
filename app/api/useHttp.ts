@@ -60,14 +60,17 @@ function paramsSerializer(params?: SearchParameters) {
 const { public: { apiBase } } = useRuntimeConfig()
 const fetch = $fetch.create({
   onRequest({ options }) {
-    // 设置基础URL
-    options.baseURL = apiBase
-    options.timeout = 10000
+    if (options.baseURL === '/') {
+      options.baseURL = apiBase
+    }
 
-    // 设置默认头
+    if (typeof options.timeout !== 'number' && !['', null, undefined].includes(options.timeout)) {
+      options.timeout = 10000
+    }
+
     options.headers = new Headers({
-      ...options.headers, // 跨域时候允许携带凭证
       'Content-Type': 'application/json',
+      ...Object.fromEntries(options.headers?.entries?.() || []),
     })
 
     // 添加认证令牌
