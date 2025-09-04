@@ -2,7 +2,7 @@
   "name": "use-bpmn",
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.15.1",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
@@ -22,22 +22,23 @@
     "diagram-js-grid": "^1.1.0",
     "element-plus": "^2.11.1",
     "lodash-es": "^4.17.21",
-    "nuxt": "^4.0.3",
-    "vue": "^3.5.20",
+    "nuxt": "^4.1.0",
+    "nuxt-shiki": "0.3.1",
+    "vue": "^3.5.21",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^5.2.1",
+    "@antfu/eslint-config": "^5.2.2",
     "@element-plus/nuxt": "^1.1.4",
     "@iconify-json/ep": "^1.2.3",
     "@nuxt/eslint": "^1.9.0",
-    "@unocss/eslint-plugin": "^66.4.2",
-    "@unocss/nuxt": "^66.4.2",
-    "@vueuse/core": "^13.8.0",
-    "@vueuse/nuxt": "^13.8.0",
+    "@unocss/eslint-plugin": "^66.5.0",
+    "@unocss/nuxt": "^66.5.0",
+    "@vueuse/core": "^13.9.0",
+    "@vueuse/nuxt": "^13.9.0",
     "eslint": "^9.34.0",
     "eslint-plugin-format": "^1.0.1",
-    "sass": "^1.91.0",
-    "unocss": "^66.4.2"
+    "sass": "^1.92.0",
+    "unocss": "^66.5.0"
   }
 }

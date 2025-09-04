@@ -5,6 +5,7 @@ export default defineNuxtConfig({
     '@element-plus/nuxt',
     '@unocss/nuxt',
     '@vueuse/nuxt',
+    'nuxt-shiki',
   ],
   ssr: false,
   pages: {
@@ -68,5 +69,9 @@ export default defineNuxtConfig({
         sortConfigKeys: true,
       },
     },
+  },
+  shiki: {
+    defaultLang: 'xml',
+    defaultTheme: 'one-dark-pro',
   },
 })
