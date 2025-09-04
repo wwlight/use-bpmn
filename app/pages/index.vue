@@ -17,6 +17,7 @@ const operationGroup = [
   { label: '下载', click: handleDownload },
   { label: '预览', click: handlePreview },
 ]
+const activeTab = ref('diagrams')
 
 onChange((fileList) => {
   if (fileList && fileList.length > 0) {
@@ -52,7 +53,7 @@ async function handleDownload() {
 }
 
 async function handlePreview() {
-  const [xml, name] = await bpmnRef.value?.getXML()
+  const [xml, name] = await bpmnRef.value?.getXML(true)
   xmlStr.value = xml
   bpmnName.value = name ?? '流程模型'
   previewVisible.value = true
@@ -102,7 +103,22 @@ async function handleSave() {
       body-class="!p-0"
     >
       <template #body>
-        <bpmn-preview :xml-str />
+        <el-tabs
+          v-model="activeTab"
+          class="h-full [&_.el-tabs\_\_header]:mb-0 [&_.el-tabs\_\_nav-wrap]:px-20 [&_.el-tab-pane]:h-full"
+        >
+          <el-tab-pane label="图表" name="diagrams">
+            <bpmn-preview :xml-str />
+          </el-tab-pane>
+          <el-tab-pane label="代码" name="code">
+            <el-scrollbar view-class="h-full">
+              <shiki
+                v-if="activeTab === 'code'" class="h-full [&_pre]:(m-0 p-15 h-max min-h-full min-w-full w-max)" as="div"
+                :code="xmlStr"
+              />
+            </el-scrollbar>
+          </el-tab-pane>
+        </el-tabs>
       </template>
     </ep-dialog>
   </div>

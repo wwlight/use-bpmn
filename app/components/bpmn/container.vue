@@ -104,11 +104,11 @@ async function createDiagram() {
   bpmnReady.value = true
 }
 
-async function getXML() {
+async function getXML(format = false) {
   if (!bpmnModeler)
     return
 
-  const { xml } = await bpmnModeler.saveXML()
+  const { xml } = await bpmnModeler.saveXML({ format })
   const { name } = await getPanelProperties(xml)
   return [xml, name] as any
 }
