@@ -1,21 +1,11 @@
-import { DBLCLICK_PROPERTY_CONFIG } from '~/constants'
-
 function RegisterDblclickEvent(eventBus, config) {
-  let isUserTaskSelected = false
   let currentHandler = null
   const selectors = [
     'input[name=assignee]',
     'input[name=candidateGroups]',
+    'input[name=candidateUsers]',
     'input[name=formKey]',
   ]
-
-  function handleDoubleClick(type, value) {
-    Object.assign(config, {
-      type,
-      visible: true,
-      value: value || '',
-    })
-  }
 
   // 绑定双击事件
   function bindDoubleClickEvents() {
@@ -34,7 +24,7 @@ function RegisterDblclickEvent(eventBus, config) {
       selectors.forEach((selector) => {
         if (target.matches(selector)) {
           const type = selector.slice(11, -1)
-          handleDoubleClick(type, target.value)
+          Object.assign(config, { type, value: target.value, visible: true })
         }
       })
     }
@@ -52,34 +42,17 @@ function RegisterDblclickEvent(eventBus, config) {
 
   eventBus.on('selection.changed', (e) => {
     const selection = e.newSelection?.[0]
-
     if (selection && selection.type === 'bpmn:UserTask') {
-      // 如果之前已经选中了 UserTask，不需要重新绑定
-      if (!isUserTaskSelected) {
-        config.selectionId = selection?.id
-        isUserTaskSelected = true
-
-        setTimeout(() => {
-          bindDoubleClickEvents()
-        })
-      }
+      config.selectionId = selection?.id
+      setTimeout(bindDoubleClickEvents)
     }
     else {
-      if (isUserTaskSelected) {
-        isUserTaskSelected = false
-        unbindDoubleClickEvents()
-        Object.assign(config, DBLCLICK_PROPERTY_CONFIG)
-      }
+      unbindDoubleClickEvents()
     }
   })
 
-  function cleanup() {
-    unbindDoubleClickEvents()
-    isUserTaskSelected = false
-  }
-
-  eventBus.on('diagram.destroy', cleanup)
-  window.addEventListener('beforeunload', cleanup)
+  eventBus.on('diagram.destroy', unbindDoubleClickEvents)
+  window.addEventListener('beforeunload', unbindDoubleClickEvents)
 }
 
 RegisterDblclickEvent.$inject = ['eventBus']

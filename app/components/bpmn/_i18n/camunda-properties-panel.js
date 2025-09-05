@@ -119,9 +119,9 @@ export default {
   'Throw expression': '异常抛出表达式',
   'Source expression': '源表达式',
 
-  'Assignee': '负责人（单击输入，双击选择）', // 负责人
+  'Assignee': '负责人（单击输入，双击选择）',
   'Candidate groups': '角色组（单击输入，双击选择）', // 候选组
-  'Candidate users': '候选用户',
+  'Candidate users': '候选用户（单击输入，双击选择）',
   'Due date': '截止日期',
   'Follow up date': '跟进日期',
 

@@ -15,7 +15,7 @@ withDefaults(
 
 <template>
   <div
-    class="relative size-full of-hidden rd-8 bg-[--g-main-bg] p-10"
+    class="p-10 rd-8 bg-[--g-main-bg] size-full relative of-hidden"
     :class="[vertical && 'flex flex-col']"
   >
     <slot />

@@ -10,7 +10,6 @@ import BpmnModeler from 'bpmn-js/lib/Modeler'
 import BpmnModdle from 'bpmn-moddle'
 import CamundaBpmnModdle from 'camunda-bpmn-moddle/resources/camunda.json'
 import gridModule from 'diagram-js-grid'
-import { DBLCLICK_PROPERTY_CONFIG } from '~/constants'
 import DialogAssignee from './_com/dialog-assignee.vue'
 import DialogCandidateGroups from './_com/dialog-candidate-groups.vue'
 import DialogFormKey from './_com/dialog-form-key.vue'
@@ -33,13 +32,18 @@ const { isFalsy } = useUtils()
 let bpmnModeler: any
 const bpmnReady = ref(false)
 // 属性面板当前双击的属性信息
-const dblclickPropertyConfig = reactive(DBLCLICK_PROPERTY_CONFIG)
+const dblclickPropertyConfig = reactive({
+  type: '',
+  value: '',
+  selectionId: '',
+  visible: false,
+})
 // 属性面板-负责人
 const assigneeVisible = computed({
   get: () => dblclickPropertyConfig.visible && dblclickPropertyConfig.type === 'assignee',
   set: (v) => {
     if (!v) {
-      Object.assign(dblclickPropertyConfig, { type: DBLCLICK_PROPERTY_CONFIG })
+      Object.assign(dblclickPropertyConfig, { visible: false, type: '' })
     }
   },
 })
@@ -48,7 +52,7 @@ const candidateGroupsVisible = computed({
   get: () => dblclickPropertyConfig.visible && dblclickPropertyConfig.type === 'candidateGroups',
   set: (v) => {
     if (!v) {
-      Object.assign(dblclickPropertyConfig, { type: DBLCLICK_PROPERTY_CONFIG })
+      Object.assign(dblclickPropertyConfig, { visible: false, type: '' })
     }
   },
 })
@@ -57,7 +61,7 @@ const formKeyVisible = computed({
   get: () => dblclickPropertyConfig.visible && dblclickPropertyConfig.type === 'formKey',
   set: (v) => {
     if (!v) {
-      Object.assign(dblclickPropertyConfig, { type: DBLCLICK_PROPERTY_CONFIG })
+      Object.assign(dblclickPropertyConfig, { visible: false, type: '' })
     }
   },
 })

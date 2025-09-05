@@ -27,6 +27,7 @@ export default {
   'Cancel boundary event': '取消边界事件',
   'Cancel end event': '取消结束事件',
   'Change type': '更改类型',
+  'Change element': '更改元素',
   'Collection': '集合',
   'Compensation boundary event': '补偿边界事件',
   'Compensation end event': '结束补偿事件',

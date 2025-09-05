@@ -14,15 +14,15 @@ HidePropertiesProvider.prototype.getGroups = function (element) {
     }
 
     // 过滤组内的字段
-    if (element?.type === 'bpmn:UserTask') {
-      groups.forEach((group) => {
-        if (group.entries) {
-          group.entries = group.entries.filter((entry) => {
-            return !['candidateUsers'].includes(entry.id)
-          })
-        }
-      })
-    }
+    // if (element?.type === 'bpmn:UserTask') {
+    //   groups.forEach((group) => {
+    //     if (group.entries) {
+    //       group.entries = group.entries.filter((entry) => {
+    //         return !['candidateUsers'].includes(entry.id)
+    //       })
+    //     }
+    //   })
+    // }
 
     return groups
   }
